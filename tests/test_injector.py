@@ -20,15 +20,9 @@ def _identity(injected_parameter=INJECTED):
 
 class TestFunctionInjection(TestCase):
     def test_one_parameter_injection(self):
-
         with MOCK_CONTEXT.arm(MockParameters(injected_parameter=4)):
             self.assertEqual(4, _identity())
 
     def test_call_parameter_supersedes_injection(self):
-
         with MOCK_CONTEXT.arm(MockParameters(injected_parameter=4)):
             self.assertEqual(5, _identity(5))
-
-    @skip
-    def test_call_without_context_is_possible(self):
-        self.assertEqual(5, _identity(5))

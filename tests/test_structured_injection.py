@@ -56,7 +56,6 @@ class InjectConstructorAttrs(object):
 class InjectConstructor(object):
     def __init__(self, a_=None):
         self.a = a_
-        pass
 
 
 class TestStructuredInjection(TestCase):
