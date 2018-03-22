@@ -140,11 +140,10 @@ def __inject_internal(suffix, injectors, class_name):
                         'Argument {} in callable {} implied to be injectable, but no default value was specified'.
                             format(argument_name, type_or_callable))
             else:
-                if result is INJECTED:
-                    if argument_name not in injectable_arguments:
-                        raise NoSourceForArgument('Cannot inject argument {} into callable {}, injectable arguments {}'.
-                                                  format(argument_name, type_or_callable,
-                                                         injectable_arguments.keys()))
+                if result is INJECTED and argument_name not in injectable_arguments:
+                    raise NoSourceForArgument('Cannot inject argument {} into callable {}, injectable arguments {}'.
+                                              format(argument_name, type_or_callable,
+                                                     injectable_arguments.keys()))
 
         for element in factory_specification.argument_names:
             validate_treatment(element)
