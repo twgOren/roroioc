@@ -1,14 +1,14 @@
 import inspect
 import itertools
 import threading
+from contextlib import contextmanager
 
 import attr
 from attr.exceptions import NotAnAttrsClassError
 from attr.validators import instance_of
-from decorator import contextmanager
+from cached_property import cached_property
 from typing import FrozenSet
 
-from roro_ioc.caching import instance_cached_property
 from roro_ioc.container import IOCContainer
 from roro_ioc.container_field_registry import get_fast_retrieval_context, register_ioc_container, \
     get_fast_retrieval_resource_handle
@@ -27,7 +27,7 @@ class InstanceIOCContainer(IOCContainer):
     injected_resource_type = attr.attrib(validator=_validate_condition)  # type: type
     allow_idempotent_arming = attr.attrib(validator=instance_of(bool))  # type: bool
 
-    @instance_cached_property
+    @cached_property
     def provides(self):
         # type: () -> FrozenSet[basestring]
         try:
