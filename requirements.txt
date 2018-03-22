@@ -1,0 +1,3 @@
+attrs == 17.2
+typing
+cached_property == 1.4.0
