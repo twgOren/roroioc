@@ -39,10 +39,10 @@ class AppliedInjection(object):
 @inject_methods_(TEST_PARAMETERS_IOC_CONTAINER)
 class AppliedInjectionUnderscore(object):
     def __init__(self):
-        self.x = 8
+        self.x = 3
 
-    def test(self, a_=None, b_=None):
-        return self.x - 8 + a_ + b_
+    def test(self, a_=INJECTED, b_=INJECTED):
+        return self.x - 3 + a_ + b_
 
     def not_to_be_wrapped(self, limit):
         return format_stack(limit=limit)
@@ -98,22 +98,24 @@ class TestErrorHandling(TestCase):
 
 class TestStructuredInjection(TestCase):
     def test_sanity(self):
-        with TEST_PARAMETERS_IOC_CONTAINER.arm(Parameters(1, 2)):
+        with self._arm():
             a = AppliedInjection()
-            self.assertEqual(a.test(), 3)
-            self.assertEqual(a.test(8), 10)
-            self.assertEqual(a.test(8, 9), 17)
-            self.assertEqual(a.test_c(), 121)
+            self.assertEqual(5, a.test())
+            self.assertEqual(8 + 3, a.test(8))
+            self.assertEqual(8 + 9, a.test(8, 9))
+            self.assertEqual(2 + 10, a.test(b=10))
+            self.assertEqual(11 ** 2, a.test_c())
 
         with self.assertRaises(NoValuesProvided):
             a.test()
 
-    def test_sanity_(self):
-        with TEST_PARAMETERS_IOC_CONTAINER.arm(Parameters(1, 2)):
+    def test_sanity_underscore(self):
+        with self._arm():
             a = AppliedInjectionUnderscore()
-            self.assertEqual(a.test(), 3)
-            self.assertEqual(a.test(8), 10)
-            self.assertEqual(a.test(8, 9), 17)
+            self.assertEqual(2 + 3, a.test())
+            self.assertEqual(8 + 3, a.test(8))
+            self.assertEqual(8 + 9, a.test(8, 9))
+            self.assertEqual(2 + 9, a.test(b_=9))
             # Should be something like
             # TestStructuredInjection.test_sanity_ in /home/uri/source/shopymate/tests/shared_tests
             # File "/home/uri/source/shopymate/tests/shared_tests/test_structured_injection.py", line , in test_sanity_
@@ -122,12 +124,12 @@ class TestStructuredInjection(TestCase):
     def test_inject_constructor(self):
         with self._arm():
             x = inject_(TEST_PARAMETERS_IOC_CONTAINER)(InjectConstructor)()
-            self.assertEqual(x.a, 2)
+            self.assertEqual(2, x.a)
 
     def test_inject_constructor_attrs(self):
         with self._arm():
             x = inject_(TEST_PARAMETERS_IOC_CONTAINER)(InjectConstructorAttrs)()
-            self.assertEqual(x.a_, 2)
+            self.assertEqual(2, x.a_)
 
     def test_injected_mangled_name(self):
         with self._arm():
