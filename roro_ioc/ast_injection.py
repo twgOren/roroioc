@@ -45,8 +45,9 @@ class _ManglePrivateMembers(NodeTransformer):
         # Make sure descendants of this node are visited too
         self.generic_visit(node)
 
-        if node.attr.startswith('__') and (not node.attr.endswith('__')) and self.class_name:
-            mangled_name = '_{}{}'.format(self.class_name, node.attr)
+        attribute_name = node.attr
+        if attribute_name.startswith('__') and (not attribute_name.endswith('__')) and self.class_name:
+            mangled_name = '_{}{}'.format(self.class_name, attribute_name)
             return copy_location(
                 Attribute(value=node.value, attr=mangled_name, ctx=node.ctx),
                 node

@@ -58,6 +58,15 @@ class InjectConstructor(object):
         self.a = a_
 
 
+@inject_methods(TEST_PARAMETERS_IOC_CONTAINER)
+class MockWithMangledNames(object):
+    def foo(self, a=INJECTED):
+        return self.__foo() + a
+
+    def __foo(self):
+        return 0
+
+
 class TestErrorHandling(TestCase):
     @skip("TODO: the wrong exception is raised because no injector was ever armed")
     def test_no_values_provided_first_injection(self):
@@ -111,11 +120,18 @@ class TestStructuredInjection(TestCase):
             self.assertIn('test_structured_injection.py', a.not_to_be_wrapped(2)[0].split()[1])
 
     def test_inject_constructor(self):
-        with TEST_PARAMETERS_IOC_CONTAINER.arm(Parameters(2, 3)):
+        with self._arm():
             x = inject_(TEST_PARAMETERS_IOC_CONTAINER)(InjectConstructor)()
             self.assertEqual(x.a, 2)
 
     def test_inject_constructor_attrs(self):
-        with TEST_PARAMETERS_IOC_CONTAINER.arm(Parameters(2, 3)):
+        with self._arm():
             x = inject_(TEST_PARAMETERS_IOC_CONTAINER)(InjectConstructorAttrs)()
             self.assertEqual(x.a_, 2)
+
+    def test_injected_mangled_name(self):
+        with self._arm():
+            self.assertEqual(2, MockWithMangledNames().foo())
+
+    def _arm(self):
+        return TEST_PARAMETERS_IOC_CONTAINER.arm(Parameters(2, 3))
