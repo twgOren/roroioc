@@ -1,6 +1,5 @@
-from typing import Any
-
 from roro_ioc.io import load_file
+from typing import Any
 
 
 class Configuration(object):
@@ -51,7 +50,8 @@ class ConfigurationAttribute(object):
 
         bootstrapper = self.bootstrapper
         if bootstrapper is None:
-            raise ConfigurationError("ConfigurationAttribute must be created after Configuration has been bound to a Bootstrapper")
+            raise ConfigurationError(
+                "ConfigurationAttribute must be created after Configuration has been bound to a Bootstrapper")
 
         @bootstrapper.on_bootstrap
         def load_value(configuration):

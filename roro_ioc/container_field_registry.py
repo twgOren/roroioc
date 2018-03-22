@@ -4,8 +4,8 @@ from abc import ABCMeta
 import attr
 from typing import Dict, Any
 
-from roro_ioc.exceptions import NoValuesProvided
 from roro_ioc.container import IOCContainer
+from roro_ioc.exceptions import NoValuesProvided
 
 
 @attr.attrs

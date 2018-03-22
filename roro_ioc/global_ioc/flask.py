@@ -14,4 +14,3 @@ def register_bootstrapped_blueprint(blueprint, bootstrapper):
         @bootstrapper.on_unbootstrap
         def restore_state():
             blueprint.deferred_functions = deferred_funcs
-

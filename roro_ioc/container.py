@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractproperty
 
-from typing import Any, FrozenSet
+from typing import FrozenSet
 
 
 class CannotBeProvided(ValueError):

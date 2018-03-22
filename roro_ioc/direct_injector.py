@@ -1,8 +1,8 @@
 import attr
 from decorator import contextmanager
+from roro_ioc.caching import static_memoize_weak_result
 from typing import Any
 
-from roro_ioc.caching import static_memoize_weak_result
 from roro_ioc.instance_ioc_container import create_ioc_container, InstanceIOCContainer
 
 
@@ -28,4 +28,5 @@ class DirectInjector(object):
         def decorated(*args, **kwargs):
             with self.__structured_injector.arm(self.__injector_configuration):
                 return self.__structured_injector.inject(to_decorate)(*args, **kwargs)
+
         return decorated

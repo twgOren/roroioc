@@ -4,12 +4,12 @@ from ast import parse, NodeTransformer, copy_location, Attribute, Name, Load, Is
 from functools import partial
 from itertools import takewhile
 from logging import getLogger
+from os.path import commonprefix, dirname, join, abspath
 
 from typing import Callable, Tuple, Any, Dict, List, Union
 
 from roro_ioc.container import IOCContainer
 from roro_ioc.container_field_registry import get_fast_retrieval_context, get_fast_retrieval_resource_handle
-from os.path import commonprefix, dirname, join, abspath
 
 _logger = getLogger(__name__)
 
@@ -33,13 +33,14 @@ def _get_source(callable_arg):
         return parse(source_stripped_prefix)
     except SyntaxError:
         raise SourceCodeInaccessibleError('Could not parse source code for function {}. Retrieved {}'.format(
-                                          callable_arg, source))
+            callable_arg, source))
 
 
 class _ManglePrivateMembers(NodeTransformer):
     def __init__(self, class_name):
         self.class_name = class_name
 
+    # noinspection PyPep8Naming
     def visit_Attribute(self, node):
         # Make sure descendants of this node are visited too
         self.generic_visit(node)
@@ -59,8 +60,9 @@ class _InjectParameters(NodeTransformer):
         self.parameters = parameters  # type: Tuple[Tuple[basestring, int], ...]
         self.injected_arguments_set = frozenset(parameter[0] for parameter in self.parameters)
         # Schema: (argument_name, resource_name, resource_handle)
-        self.default_argument_name = default_argument_name   # type: basestring
+        self.default_argument_name = default_argument_name  # type: basestring
 
+    # noinspection PyPep8Naming
     def visit_FunctionDef(self, node):
         function_name = node.name
 
@@ -103,7 +105,7 @@ class _InjectParameters(NodeTransformer):
 
             consequence = [
                 Assign(targets=[Name(id=arg_name, ctx=Store())],
-                                  value=target_attribute),
+                       value=target_attribute),
                 If(test=Compare(left=Name(id=arg_name, ctx=Load()), ops=[Is()],
                                 comparators=[Name(id=INTERNAL_CONTEXT_NAME, ctx=Load())]),
                    body=[Expr(value=Call(func=Attribute(value=Name(id=INTERNAL_CONTEXT_NAME, ctx=Load()),
@@ -113,7 +115,7 @@ class _InjectParameters(NodeTransformer):
                                          kwargs=None,
                                          args=[Str(s=arg_name)]))],
                    orelse=[])
-                ]   # type: List[Union[Assign, If]
+            ]  # type: List[Union[Assign, If]
 
             return If(test=Compare(left=Name(id=arg_name, ctx=Load()), ops=[Is()],
                                    comparators=[default_nodes_mapping[arg_name]]),

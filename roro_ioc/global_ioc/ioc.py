@@ -1,10 +1,10 @@
 import copy
 import inspect
 from collections import defaultdict
-from enum import Enum
 from types import FunctionType
 
 import inject as _inject
+from enum import Enum
 from typing import List, Dict
 
 
@@ -42,7 +42,8 @@ class Bootstrapper(object):
                 arg_defaults = dict(zip(reversed(arg_names), reversed(argspec.defaults or ())))
 
                 supplied_kwargs = {name: kwargs_pool[name] for name in arg_names if name in kwargs_pool}
-                missing_kwargs = [name for name in arg_names if name not in supplied_kwargs and name not in arg_defaults]
+                missing_kwargs = [name for name in arg_names if
+                                  name not in supplied_kwargs and name not in arg_defaults]
                 if missing_kwargs:
                     raise KeyError("Bootstrap function '{}' ({}:{}) is missing fundamentals: {}".format(
                         bootstrap_func.func_name,
@@ -97,4 +98,3 @@ class Bootstrapper(object):
 
 inject = _inject.params
 Binder = _inject.Binder  # for type hinting
-
