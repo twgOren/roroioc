@@ -174,7 +174,6 @@ def is_suitable_for_rewriting(type_or_callable):
         project_root = abspath(join(dirname(__file__), '../../../'))
         common = commonprefix((project_root, target_path))
         return common == project_root
-
     except:
         _logger.exception('Exception checking function %s', type_or_callable)
         return False

@@ -1,5 +1,5 @@
 from traceback import format_stack
-from unittest import TestCase
+from unittest import TestCase, skip
 
 import attr
 from cached_property import cached_property
@@ -58,6 +58,35 @@ class InjectConstructor(object):
         self.a = a_
 
 
+class TestErrorHandling(TestCase):
+    @skip("TODO: the wrong exception is raised because no injector was ever armed")
+    def test_no_values_provided_first_injection(self):
+        a = AppliedInjection()
+        with self.assertRaises(NoValuesProvided):
+            a.test()
+
+    def test_no_values_provided(self):
+        a = AppliedInjection()
+        with TEST_PARAMETERS_IOC_CONTAINER.arm(Parameters(1, 2)):
+            a.test()
+        with self.assertRaises(NoValuesProvided):
+            a.test()
+
+    def test_no_values_provided_underscore(self):
+        a = AppliedInjectionUnderscore()
+        with TEST_PARAMETERS_IOC_CONTAINER.arm(Parameters(1, 2)):
+            a.test()
+        with self.assertRaises(NoValuesProvided):
+            a.test()
+
+    def test_invalid_argument(self):
+        with self.assertRaises(NoSourceForArgument):
+            @inject_methods(TEST_PARAMETERS_IOC_CONTAINER)
+            class Test(object):
+                def test(self, z=INJECTED):
+                    return z
+
+
 class TestStructuredInjection(TestCase):
     def test_sanity(self):
         with TEST_PARAMETERS_IOC_CONTAINER.arm(Parameters(1, 2)):
@@ -80,16 +109,6 @@ class TestStructuredInjection(TestCase):
             # TestStructuredInjection.test_sanity_ in /home/uri/source/shopymate/tests/shared_tests
             # File "/home/uri/source/shopymate/tests/shared_tests/test_structured_injection.py", line , in test_sanity_
             self.assertIn('test_structured_injection.py', a.not_to_be_wrapped(2)[0].split()[1])
-
-        with self.assertRaises(NoValuesProvided):
-            a.test()
-
-    def test_invalid_argument(self):
-        with self.assertRaises(NoSourceForArgument):
-            @inject_methods(TEST_PARAMETERS_IOC_CONTAINER)
-            class Test(object):
-                def test(self, z=INJECTED):
-                    return z
 
     def test_inject_constructor(self):
         with TEST_PARAMETERS_IOC_CONTAINER.arm(Parameters(2, 3)):
