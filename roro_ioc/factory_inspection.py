@@ -1,4 +1,3 @@
-import itertools
 from inspect import getargspec
 from logging import getLogger
 
@@ -25,15 +24,14 @@ def _format_defaults(arg_names, defaults):
                          if default_value != attr.NOTHING)
 
 
-def extract_factory_specification_for_attrs(type, allow_defaults):
-    fields = (field for field in attr.fields(type)
-              if allow_defaults or field.default == attr.NOTHING)
-    (fields_for_names, fields_for_defaults) = itertools.tee(fields, 2)
+def extract_factory_specification_for_attrs(type_, allow_defaults):
+    fields = [field for field in attr.fields(type_)
+              if allow_defaults or field.default == attr.NOTHING]
 
-    argument_names = tuple(field.name for field in fields_for_names)
-    defaults = ImmutableDict((field.name, field.default) for field in fields_for_defaults
+    argument_names = tuple(field.name for field in fields)
+    defaults = ImmutableDict((field.name, field.default) for field in fields
                              if field.default != attr.NOTHING)
-    subject_callable = type
+    subject_callable = type_
     return FactorySpecification(subject_callable, argument_names, defaults)
 
 

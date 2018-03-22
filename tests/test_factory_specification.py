@@ -33,3 +33,9 @@ class TestFactorySpecification(TestCase):
         specification = extract_factory_specification(_MockClass)
         self.assertIsNot(_MockClass, specification.constructing_function)
         self.assertIs(_MockClass.__init__, specification.constructing_function)
+
+    def test_degenerate_specification_for_non_callable(self):
+        # noinspection PyTypeChecker
+        specification = extract_factory_specification('Not a callable object')
+        self.assertFalse(specification.argument_default_values)
+        self.assertFalse(specification.argument_names)
