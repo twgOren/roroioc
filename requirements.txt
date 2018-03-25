@@ -1,4 +1,4 @@
 attrs == 17.2
-typing
+typing == 3.6.4
 cached_property == 1.4.0
 werkzeug == 0.14.1
