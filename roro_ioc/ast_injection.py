@@ -46,14 +46,22 @@ class _ManglePrivateMembers(NodeTransformer):
         self.generic_visit(node)
 
         attribute_name = node.attr
-        if attribute_name.startswith('__') and (not attribute_name.endswith('__')) and self.class_name:
-            mangled_name = '_{}{}'.format(self.class_name, attribute_name)
+        if self._should_mangle(attribute_name):
+            mangled_name = self._get_mangled_name(attribute_name)
             return copy_location(
                 Attribute(value=node.value, attr=mangled_name, ctx=node.ctx),
                 node
             )
         else:
             return node
+
+    def _should_mangle(self, attribute_name):
+        return attribute_name.startswith('__') and (not attribute_name.endswith('__')) and self.class_name
+
+    def _get_mangled_name(self, attribute_name):
+        mangled_class_name = '_{}'.format(self.class_name.lstrip('_'))
+        mangled_name = '{}{}'.format(mangled_class_name, attribute_name)
+        return mangled_name
 
 
 class _InjectParameters(NodeTransformer):
