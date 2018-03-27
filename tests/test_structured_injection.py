@@ -135,5 +135,29 @@ class TestStructuredInjection(TestCase):
         with self._arm():
             self.assertEqual(2, MockWithMangledNames().foo())
 
+    def test_inject_method_to_underscored_class_name(self):
+        @inject_methods(TEST_PARAMETERS_IOC_CONTAINER)
+        class _MockWithMangledNames(object):
+            def foo(self, a=INJECTED):
+                return self.__foo() + a
+
+            def __foo(self):
+                return 0
+
+        with self._arm():
+            self.assertEqual(2, _MockWithMangledNames().foo())
+
+    def test_inject_method_to_mangled_class_name(self):
+        @inject_methods(TEST_PARAMETERS_IOC_CONTAINER)
+        class __MockWithMangledNames(object):
+            def foo(self, a=INJECTED):
+                return self.__foo() + a
+
+            def __foo(self):
+                return 0
+
+        with self._arm():
+            self.assertEqual(2, __MockWithMangledNames().foo())
+
     def _arm(self):
         return TEST_PARAMETERS_IOC_CONTAINER.arm(Parameters(2, 3))
