@@ -4,7 +4,6 @@ from ast import parse, NodeTransformer, copy_location, Attribute, Name, Load, Is
 from functools import partial
 from itertools import takewhile
 from logging import getLogger
-from os.path import commonprefix, dirname, join, abspath
 
 from typing import Callable, Tuple, Any, Dict, List, Union
 
@@ -175,14 +174,3 @@ def rewrite_ast(type_or_callable, class_name, injectable_arguments_tuple, arg_to
          globals_dict, locals_dict)
 
     return locals_dict.get(function_name)
-
-
-def is_suitable_for_rewriting(type_or_callable):
-    try:
-        target_path = abspath(inspect.getsourcefile(type_or_callable))
-        project_root = abspath(join(dirname(__file__), '../../../'))
-        common = commonprefix((project_root, target_path))
-        return common == project_root
-    except:
-        _logger.exception('Exception checking function %s', type_or_callable)
-        return False
