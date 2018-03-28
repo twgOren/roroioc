@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='roro_ioc',
     packages=['roro_ioc'],
-    version='0.1.2',
+    version='0.1.3',
     description='IOC Injection for python',
     author='Twiggle',
     author_email='oren@twiggle.com',
