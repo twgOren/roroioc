@@ -6,7 +6,7 @@ from os import environ
 
 from typing import Optional
 
-from roro_ioc.ast_injection import rewrite_ast, is_suitable_for_rewriting
+from roro_ioc.ast_injection import rewrite_ast
 from roro_ioc.container import IOCContainer
 from roro_ioc.exceptions import NoSourceForArgument, NoDefaultValueForArgument, DoubleProvidingProhibited
 from roro_ioc.exceptions import NoValuesProvided
@@ -169,14 +169,10 @@ def __inject_internal(suffix, injectors, class_name):
         if not _USE_WRAPPING_INJECTOR:
             if inspect.isfunction(type_or_callable) or \
                     inspect.ismethod(type_or_callable) or inspect.ismethoddescriptor(type_or_callable):
-                if is_suitable_for_rewriting(type_or_callable):
-                    return rewrite_ast(type_or_callable,
-                                       class_name,
-                                       injectable_arguments_tuple,
-                                       arg_to_ioc_container)
-                else:
-                    _logger.warn('Tried to decorate %s, but it is unsuitable. Proceeding with fallback',
-                                 type_or_callable)
+                return rewrite_ast(type_or_callable,
+                                   class_name,
+                                   injectable_arguments_tuple,
+                                   arg_to_ioc_container)
 
         @wraps(type_or_callable)
         def substitute_parameters(*args, **kwargs):
