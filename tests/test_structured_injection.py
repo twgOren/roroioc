@@ -159,5 +159,17 @@ class TestStructuredInjection(TestCase):
         with self._arm():
             self.assertEqual(2, __MockWithMangledNames().foo())
 
+    def test_not_injecting_when_default_is_none(self):
+        @inject_(TEST_PARAMETERS_IOC_CONTAINER)
+        def foo(a=None):
+            return a
+
+        with self._arm():
+            value_provided = foo(5)
+            self.assertEqual(5, value_provided)
+
+            a_default_value = foo()
+            self.assertIsNone(a_default_value)
+
     def _arm(self):
         return TEST_PARAMETERS_IOC_CONTAINER.arm(Parameters(2, 3))
