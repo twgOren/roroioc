@@ -1,20 +1,17 @@
 from setuptools import setup
 
 
-def readfile(filename):
-    with open(filename) as f:
+def make_readme():
+    with open('README') as f:
         return f.read()
 
-
-readme = readfile('README.md')
 
 setup(
     name='roro_ioc',
     packages=['roro_ioc'],
-    version='0.1.6',
+    version='0.1.11',
     description='IOC Injection for python',
-    long_description=readme,
-    long_description_content_type='text/markdown',
+    long_description=make_readme(),
     author='Twiggle',
     author_email='oren@twiggle.com',
     url='https://github.com/twgOren/roroioc',
