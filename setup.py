@@ -11,9 +11,10 @@ readme = readfile('README.md')
 setup(
     name='roro_ioc',
     packages=['roro_ioc'],
-    version='0.1.5',
+    version='0.1.6',
     description='IOC Injection for python',
     long_description=readme,
+    long_description_content_type='text/markdown',
     author='Twiggle',
     author_email='oren@twiggle.com',
     url='https://github.com/twgOren/roroioc',
