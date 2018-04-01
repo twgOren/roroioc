@@ -1,3 +1,38 @@
+[![Build Status](https://travis-ci.org/twgOren/roroioc.svg?branch=master)](https://travis-ci.org/twgOren/roroioc)
+
+# RORO IOC
+
+As in [roll on roll off](https://en.wikipedia.org/wiki/Roll-on/roll-off),
+is a dependency injection framework. It is contextual and high performance.
+
+# Example
+
+```python
+from attr import attrs, attrib
+from roro_ioc import INJECTED, create_ioc_container, inject
+
+
+@attrs
+class ApplicationContext(object):
+    my_data_set = attrib()
+
+
+APP_CONTEXT_IOC_CONTAINER = create_ioc_container(ApplicationContext)
+
+
+@inject(APP_CONTEXT_IOC_CONTAINER)
+def get_data(my_data_set=INJECTED):
+    print('Copying data from {}'.format(my_data_set))
+
+
+my_context = ApplicationContext(my_data_set='s3://bucket/data')
+
+with APP_CONTEXT_IOC_CONTAINER.arm(my_context):
+    get_data()  # prints: "Copying data from s3://bucket/data"
+```
+
+# License
+
 Copyright (c) 2018 Twiggle Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

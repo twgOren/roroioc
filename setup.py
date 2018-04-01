@@ -7,14 +7,13 @@ def readfile(filename):
 
 
 readme = readfile('README.md')
-license = readfile('LICENSE')
 
 setup(
     name='roro_ioc',
     packages=['roro_ioc'],
     version='0.1.4',
     description='IOC Injection for python',
-    long_description='{}\n\n{}'.format(readme, license),
+    long_description=readme,
     author='Twiggle',
     author_email='oren@twiggle.com',
     url='https://github.com/twgOren/roroioc',
