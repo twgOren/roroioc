@@ -11,7 +11,7 @@ readme = readfile('README.md')
 setup(
     name='roro_ioc',
     packages=['roro_ioc'],
-    version='0.1.4',
+    version='0.1.5',
     description='IOC Injection for python',
     long_description=readme,
     author='Twiggle',
