@@ -10,7 +10,7 @@ README: README.md
 
 build: test README
 	python setup.py build sdist
-
+	python setup.py test
 
 publish: build README
 	python setup.py sdist upload
