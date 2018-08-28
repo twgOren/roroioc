@@ -83,14 +83,19 @@ class InstanceIOCContainer(IOCContainer):
 def _integrate_resources(ioc_container, fast_retrieval_context, payload):
     if not hasattr(fast_retrieval_context, 'resources'):
         fast_retrieval_context.resources = []
-    for resource_name in ioc_container.provides:
-        handle = get_fast_retrieval_resource_handle(ioc_container, resource_name)
-        current_length = len(fast_retrieval_context.resources)
-        if handle >= current_length:
-            fast_retrieval_context.resources.extend([fast_retrieval_context] * (1 + handle - current_length))
-        assert fast_retrieval_context.resources[handle] is fast_retrieval_context
-        fast_retrieval_context.resources[handle] = getattr(payload, resource_name)
 
+    handles_to_resources = {
+        get_fast_retrieval_resource_handle(ioc_container, resource_name): getattr(payload, resource_name)
+        for resource_name in ioc_container.provides}
+
+    max_handle = max(handles_to_resources)
+    current_length = len(fast_retrieval_context.resources)
+    if max_handle >= current_length:
+        fast_retrieval_context.resources.extend([fast_retrieval_context] * (1 + max_handle - current_length))
+
+    for handle, resource in handles_to_resources.iteritems():
+        assert fast_retrieval_context.resources[handle] is fast_retrieval_context
+        fast_retrieval_context.resources[handle] = resource
 
 # fast_retrieval_context is used as a placeholder for resources that are not currently provided
 def _cleanup_resources(ioc_container, fast_retrieval_context):
