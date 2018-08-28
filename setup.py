@@ -9,7 +9,7 @@ def make_readme():
 setup(
     name='roro_ioc',
     packages=['roro_ioc'],
-    version='0.1.11',
+    version='0.1.12',
     description='IOC Injection for python',
     long_description=make_readme(),
     author='Twiggle',
